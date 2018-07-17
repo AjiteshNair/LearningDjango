@@ -1,22 +1,20 @@
 from django.http import HttpResponse
-from django.template import loader
-
 from .models import Question
+from django.http import Http404
+
+from django.shortcuts import get_object_or_404, render
+
+def detail(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    return render(request, 'polls/detail.html', {'question': question})
 
 
 def index(request):
     latest_question_list = Question.objects.order_by('-pub_date')[:5]
-    template = loader.get_template('polls/index.html')
-    context = {
-        'latest_question_list': latest_question_list,
-    }
-    return HttpResponse(template.render(context, request))
+    context = {'latest_question_list': latest_question_list}
+    return render(request, 'polls/index.html', context)
 
 # Leave the rest of the views (detail, results, vote) unchanged
-
-#def index(request):
-#    return HttpResponse("Hello, world. You're at the polls index.")     # displays this when address/polls is opened
-
 #adding new functions with arguments
 
 def detail(request, question_id):
